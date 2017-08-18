@@ -9,7 +9,7 @@ jobs:
       - docker build -t docker-template .
       - docker images
       - DATE=`date +%Y-%m-%d`
-      - TAG_NAME="${TRAVIS_BRANCH}-${DATE}-${TRAVIS_COMMIT}
+      - TAG_NAME="${TRAVIS_BRANCH}-${DATE}-${TRAVIS_COMMIT}"
       - docker tag docker-template pelias/docker-template:${TAG_NAME}
       - docker push pelias/docker-template:${TAG_NAME}
     - stage: test
