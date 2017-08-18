@@ -1,0 +1,15 @@
+sudo: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+      - docker build -t docker-template .
+      - docker images
+      - docker tag docker-template $DOCKER_USERNAME/docker-template
+      - docker push $DOCKER_USERNAME/docker-template
+    - stage: test
+      script: docker run --rm $DOCKER_USERNAME/docker-template npm run test
+    - script: docker run --rm $DOCKER_USERNAME/docker-template npm run test
