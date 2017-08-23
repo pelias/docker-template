@@ -10,13 +10,15 @@ jobs:
       - run:
           name: Build application Docker image
           command: |
-            docker build -t pelias/docker-template .
+            IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
+            docker build -t pelias/${IMAGE_NAME} .
       - run:
           name: Push image to Docker Hub
           command: |
+            DATE=`date +%Y-%m-%d`
+            IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
+            TAG_NAME="${CIRCLE_BRANCH}-${DATE}-${CIRCLE_SHA1}"
             docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
             docker images
-            DATE=`date +%Y-%m-%d`
-            TAG_NAME="${CIRCLE_BRANCH}-${DATE}-${CIRCLE_SHA1}"
-            docker tag docker-template pelias/docker-template:${TAG_NAME}
-            docker push pelias/docker-template:${TAG_NAME}
+            docker tag pelias/${IMAGE_NAME} pelias/${IMAGE_NAME}:${TAG_NAME}
+            docker push pelias/${IMAGE_NAME}:${TAG_NAME}
