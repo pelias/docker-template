@@ -8,17 +8,12 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build application Docker image
-          command: |
-            IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
-            docker build -t pelias/${IMAGE_NAME} .
-      - run:
-          name: Push image to Docker Hub
+          name: Build and push image to Docker Hub
           command: |
             DATE=`date +%Y-%m-%d`
-            IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
-            TAG_NAME="${CIRCLE_BRANCH}-${DATE}-${CIRCLE_SHA1}"
+            DOCKER_REPOSITORY=pelias
+            DOCKER_IMAGE_VERSION="${CIRCLE_BRANCH}-${DATE}-${CIRCLE_SHA1}"
+            DOCKER_IMAGE_NAME=${DOCKER_REPOSITORY}/$CIRCLE_PROJECT_REPONAME:${DOCKER_IMAGE_VERSION}
+            docker build -t $DOCKER_IMAGE_NAME .
             docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-            docker images
-            docker tag pelias/${IMAGE_NAME} pelias/${IMAGE_NAME}:${TAG_NAME}
-            docker push pelias/${IMAGE_NAME}:${TAG_NAME}
+            docker push $DOCKER_IMAGE_NAME
