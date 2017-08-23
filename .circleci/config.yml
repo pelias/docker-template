@@ -11,3 +11,13 @@ jobs:
           name: Build application Docker image
           command: |
             docker build -t pelias/docker-template .
+      - run:
+          name: Push image to Docker Hub
+          command: |
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+            docker build -t docker-template .
+            docker images
+            DATE=`date +%Y-%m-%d`
+            TAG_NAME="${CIRCLE_BRANCH}-${DATE}-${CIRCLE_SHA1}"
+            docker tag docker-template pelias/docker-template:${TAG_NAME}
+            docker push pelias/docker-template:${TAG_NAME}
