@@ -15,7 +15,6 @@ jobs:
           name: Push image to Docker Hub
           command: |
             docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-            docker build -t docker-template .
             docker images
             DATE=`date +%Y-%m-%d`
             TAG_NAME="${CIRCLE_BRANCH}-${DATE}-${CIRCLE_SHA1}"
