@@ -1,18 +1,17 @@
 sudo: true
 dist: trusty
 language: node_js
-
 jobs:
   include:
     - stage: build docker image
       script:
-      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -t docker-template .
-      - docker images
-      - DATE=`date +%Y-%m-%d`
-      - TAG_NAME="${TRAVIS_BRANCH}-${DATE}-${TRAVIS_COMMIT}"
-      - docker tag docker-template pelias/docker-template:${TAG_NAME}
-      - docker push pelias/docker-template:${TAG_NAME}
+        - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+        - docker build -t docker-template .
+        - docker images
+        - DATE=`date +%Y-%m-%d`
+        - 'TAG_NAME="${TRAVIS_BRANCH}-${DATE}-${TRAVIS_COMMIT}"'
+        - 'docker tag docker-template pelias/docker-template:${TAG_NAME}'
+        - 'docker push pelias/docker-template:${TAG_NAME}'
     - stage: test
       script: docker run --rm $DOCKER_USERNAME/docker-template npm run test
     - script: docker run --rm $DOCKER_USERNAME/docker-template npm run test
